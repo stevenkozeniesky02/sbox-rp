@@ -69,11 +69,61 @@ Chat
 	.input
 	{
 		color: white;
+		flex-direction: column;
+		gap: 6px;
 
 		.textentry
 		{
 			align-items: flex-start;
 			white-space: normal;
+		}
+
+		.command_preview
+		{
+			flex-direction: column;
+			gap: 4px;
+			padding: 6px;
+			background-color: rgba( #07131d, 0.86 );
+			border-radius: 8px;
+			backdrop-filter: blur( 8px );
+		}
+
+		.command_suggestion
+		{
+			align-items: center;
+			gap: 8px;
+			padding: 5px 6px;
+			border-radius: 4px;
+			background-color: rgba( #ffffff, 0.04 );
+		}
+
+		.command_usage
+		{
+			min-width: 150px;
+			flex-shrink: 0;
+			color: $color-accent;
+			font-weight: 800;
+			font-size: 16px;
+		}
+
+		.command_description
+		{
+			flex-grow: 1;
+			color: rgba( #fff, 0.88 );
+			font-size: 15px;
+			font-weight: 500;
+		}
+
+		.command_access
+		{
+			flex-shrink: 0;
+			padding: 2px 6px;
+			border-radius: 4px;
+			background-color: rgba( $color-accent, 0.14 );
+			color: $color-accent;
+			font-size: 12px;
+			font-weight: 800;
+			text-transform: uppercase;
 		}
 	}
 

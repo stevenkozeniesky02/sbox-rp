@@ -78,26 +78,35 @@ public sealed partial class Player
 		if ( Rpc.Caller != Network.Owner )
 			return;
 
+		TryUpdateRoleplayName( roleplayName );
+	}
+
+	public bool TryUpdateRoleplayName( string roleplayName )
+	{
+		if ( !Networking.IsHost || Network.Owner is null )
+			return false;
+
 		if ( !TryNormalizeRoleplayName( roleplayName, out var normalizedName, out var error ) )
 		{
 			Notices.SendNotice( Network.Owner, "block", Color.Red, error, 3 );
-			return;
+			return false;
 		}
 
 		if ( string.Equals( PlayerData?.DisplayName, normalizedName, StringComparison.Ordinal ) )
 		{
 			Notices.SendNotice( Network.Owner, "person", Color.Yellow, "You're already using this RP name.", 3 );
-			return;
+			return false;
 		}
 
 		if ( IsRoleplayNameTaken( normalizedName ) )
 		{
 			Notices.SendNotice( Network.Owner, "block", Color.Red, "This RP name is already taken.", 3 );
-			return;
+			return false;
 		}
 
 		SetRoleplayName( normalizedName );
 		Notices.SendNotice( Network.Owner, "person", Color.Green, $"RP name updated to {normalizedName}.", 3 );
+		return true;
 	}
 
 	static bool TryNormalizeRoleplayName( string value, out string normalizedName, out string error )
@@ -155,22 +164,31 @@ public sealed partial class Player
 		if ( Rpc.Caller != Network.Owner )
 			return;
 
+		TryDropMoney( amount );
+	}
+
+	public bool TryDropMoney( int amount )
+	{
+		if ( !Networking.IsHost || Network.Owner is null )
+			return false;
+
 		if ( amount <= 0 )
 		{
 			Notices.SendNotice( Network.Owner, "block", Color.Red, "Enter a valid amount to drop.", 3 );
-			return;
+			return false;
 		}
 
 		if ( !TryTakeMoney( amount ) )
 		{
 			Notices.SendNotice( Network.Owner, "block", Color.Red, "You don't have enough money.", 3 );
-			return;
+			return false;
 		}
 
 		if ( MoneyStack.TrySpawn( this, amount ) )
-			return;
+			return true;
 
 		GiveMoney( amount );
 		Notices.SendNotice( Network.Owner, "block", Color.Red, "Unable to drop money right now.", 3 );
+		return false;
 	}
 }

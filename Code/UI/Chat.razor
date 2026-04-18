@@ -21,6 +21,22 @@
 
     <div class="input">
         <TextEntry @ref="InputBox" onsubmit="@ChatFinished"></TextEntry>
+        @if (Suggestions.Count > 0)
+        {
+            <div class="command_preview">
+                @foreach (var suggestion in Suggestions)
+                {
+                    <div class="command_suggestion">
+                        <div class="command_usage">@suggestion.Usage</div>
+                        <div class="command_description">@suggestion.Description</div>
+                        @if (!string.IsNullOrWhiteSpace(suggestion.AccessText))
+                        {
+                            <div class="command_access">@suggestion.AccessText</div>
+                        }
+                    </div>
+                }
+            </div>
+        }
     </div>
 
 </root>
@@ -28,9 +44,12 @@
 @code
 {
     TextEntry InputBox = default;
+    string LastInputText = "";
+    bool LastInputFocused;
 
     public record Entry( ulong steamid, string author, string message, RealTimeSince timeSinceAdded );
     List<Entry> Entries = new();
+    List<ChatCommandPreview> Suggestions = new();
 
     protected override void OnUpdate()
     {
@@ -43,6 +62,8 @@
         {
             InputBox.Focus();
         }
+
+        UpdateCommandSuggestions();
 
         if ( Entries.RemoveAll( x => x.timeSinceAdded > 20.0f ) > 0 )
         {
@@ -57,11 +78,47 @@
     {
         var text = InputBox.Text;
         InputBox.Text = "";
+        Suggestions.Clear();
+        LastInputText = "";
+        LastInputFocused = false;
 
         if (string.IsNullOrWhiteSpace(text))
             return;
 
+        if (ChatCommandSystem.IsCommandInput(text))
+        {
+            RequestRunCommand(text);
+            StateHasChanged();
+            return;
+        }
+
         AddText( text );
+    }
+
+    void UpdateCommandSuggestions()
+    {
+        var text = InputBox.Text ?? "";
+        var focused = InputBox.HasFocus;
+        if (text == LastInputText && focused == LastInputFocused)
+            return;
+
+        LastInputText = text;
+        LastInputFocused = focused;
+        Suggestions = focused
+            ? ChatCommandSystem.GetPreviews(text, Player.FindLocalPlayer()).ToList()
+            : new();
+        StateHasChanged();
+    }
+
+	[Rpc.Host]
+    public void RequestRunCommand( string message )
+    {
+        message = message.Truncate(300);
+
+        if (string.IsNullOrWhiteSpace(message))
+            return;
+
+        ChatCommandSystem.TryExecute(Rpc.Caller, message);
     }
 
     [ConCmd( "say" )]
@@ -115,6 +172,17 @@
 
         Entries.Add(new Entry(0, icon, message, 0.0f));
         StateHasChanged();
+    }
+
+    public void AddSystemTextTo( Connection target, string message, string icon = "ℹ️" )
+    {
+        if (!Networking.IsHost || target is null)
+            return;
+
+        using (Rpc.FilterInclude(target))
+        {
+            AddSystemText(message, icon);
+        }
     }
 
 }
