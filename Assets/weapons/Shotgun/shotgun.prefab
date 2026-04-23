@@ -87,6 +87,7 @@
           "prefab": "weapons/shotgun/shotgun.prefab"
         },
         "MaxReserveAmmo": 40,
+        "MuzzleGameObject": null,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -220,7 +221,10 @@
               "_type": "gameobject",
               "go": "2fc7abfe-6fb9-95af-f717-4fc8ccc140e1"
             },
-            "MuzzleEffect": null,
+            "MuzzleEffect": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapon_effects/pistol_muzzleflash.prefab"
+            },
             "MuzzleTransform": {
               "_type": "gameobject",
               "go": "1eb69aed-5fa8-84fe-e606-3eb7bbb03f00"
@@ -237,7 +241,10 @@
               "go": "da725ca9-1b64-40ba-a2c2-fad3776e75be",
               "component_type": "SkinnedModelRenderer"
             },
-            "TracerEffect": null
+            "TracerEffect": {
+              "_type": "gameobject",
+              "prefab": "weapons/tracer_9mm.prefab"
+            }
           },
           {
             "__type": "Sandbox.SkinnedModelRenderer",
@@ -353,6 +360,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
+    "facepunch.pistol_muzzleflash#76089",
     "facepunch.w_spaghellim4#144906"
   ],
   "__version": 2

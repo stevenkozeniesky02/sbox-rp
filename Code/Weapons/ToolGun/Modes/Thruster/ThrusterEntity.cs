@@ -25,13 +25,16 @@ public class ThrusterEntity : Component, IPlayerControllable
 	[Property, Sync, ClientEditable]
 	public ClientInput Reverse { get; set; }
 
-	private static SoundEvent _defaultSound = ResourceLibrary.Get<SoundEvent>( "entities/thruster/sounds/thruster_loop_default.sound" );
+	/// <summary>
+	/// The fallback sound for all thrusters.
+	/// </summary>
+	private static SoundDefinition _defaultSound = ResourceLibrary.Get<SoundDefinition>( "entities/thruster/sounds/thruster_basic.sndef" );
 
 	/// <summary>
 	/// Looping sound played while the thruster is active.
 	/// </summary>
-	[Property, Group( "Sound" )]
-	public SoundEvent ThrusterSound { get; set; }
+	[Property, ClientEditable, Metadata( SoundDefinition.Thruster ), Group( "Sound" )]
+	public SoundDefinition ThrusterSound { get; set; }
 
 	/// <summary>
 	/// Current thrust output, -1 to 1. Updated every control frame.
@@ -49,7 +52,22 @@ public class ThrusterEntity : Component, IPlayerControllable
 
 	protected override void OnDisabled()
 	{
+		_state = false;
 		StopThrusterSound();
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( _state )
+		{
+			if ( !_thrusterSound.IsValid() )
+				StartThrusterSound();
+		}
+		else
+		{
+			if ( _thrusterSound.IsValid() )
+				StopThrusterSound();
+		}
 	}
 
 	void AddThrust( float amount )
@@ -64,6 +82,7 @@ public class ThrusterEntity : Component, IPlayerControllable
 
 	bool _state;
 
+	[Rpc.Broadcast]
 	public void SetActiveState( bool state )
 	{
 		if ( _state == state ) return;
@@ -72,47 +91,26 @@ public class ThrusterEntity : Component, IPlayerControllable
 
 		if ( !HideEffects )
 			OnEffect?.Enabled = state;
-
-		if ( state )
-		{
-			StartThrusterSound();
-			Sandbox.Services.Stats.Increment( "tool.thruster.activate", 1 );
-		}
-		else
-		{
-			StopThrusterSound();
-		}
-
-		Network.Refresh();
 	}
 
-	void StartThrusterSound()
+	private void StartThrusterSound()
 	{
-		if ( _thrusterSound.IsValid() && !_thrusterSound.IsStopped ) return;
+		if ( _thrusterSound.IsValid() )
+			StopThrusterSound();
 
 		var sound = ThrusterSound ?? _defaultSound;
 		if ( sound is null ) return;
 
-		_thrusterSound = Sound.Play( sound, WorldPosition );
-		_thrusterSound.Parent = GameObject;
-		_thrusterSound.FollowParent = true;
+		_thrusterSound = sound.Play( WorldPosition, GameObject );
 	}
 
-	void StopThrusterSound()
+	private void StopThrusterSound()
 	{
 		if ( _thrusterSound.IsValid() )
 		{
-			_thrusterSound.Stop();
+			_thrusterSound.Stop( 0.5f );
 			_thrusterSound = default;
 		}
-	}
-
-	public void OnStartControl()
-	{
-	}
-
-	public void OnEndControl()
-	{
 	}
 
 	public void OnControl()
@@ -123,6 +121,15 @@ public class ThrusterEntity : Component, IPlayerControllable
 		ThrustAmount = analog;
 
 		AddThrust( analog );
-		SetActiveState( MathF.Abs( analog ) > 0.1f );
+
+		var active = MathF.Abs( analog ) > 0.1f;
+
+		if ( active != _state )
+		{
+			if ( active )
+				Sandbox.Services.Stats.Increment( "tool.thruster.activate", 1 );
+
+			SetActiveState( active );
+		}
 	}
 }

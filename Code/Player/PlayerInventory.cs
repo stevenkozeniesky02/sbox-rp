@@ -285,9 +285,13 @@ public sealed class PlayerInventory : Component, IPlayerEvent, ISaveEvents
 		if ( slot < 0 )
 			return;
 
-		item.GameObject.Parent = GameObject;
+		item.GameObject.SetParent( GameObject, false );
+		item.LocalTransform = global::Transform.Zero;
 		item.InventorySlot = slot;
 		item.GameObject.Enabled = false;
+
+		// Remove from undo stacks so the weapon can't be undone out of our hands
+		UndoSystem.Current.Remove( item.GameObject );
 
 		if ( Network.Owner is not null )
 			item.Network.AssignOwnership( Network.Owner );
@@ -341,8 +345,9 @@ public sealed class PlayerInventory : Component, IPlayerEvent, ISaveEvents
 						StartEnabled = true
 					} );
 
-					pickup.NetworkSpawn();
 					Ownable.Set( pickup, Player.Network.Owner );
+					pickup.Tags.Add( "removable" );
+					pickup.NetworkSpawn();
 
 					if ( pickup.GetComponent<Rigidbody>() is { } rb )
 					{
@@ -364,8 +369,9 @@ public sealed class PlayerInventory : Component, IPlayerEvent, ISaveEvents
 				StartEnabled = true
 			} );
 
-			pickup.NetworkSpawn();
 			Ownable.Set( pickup, Player.Network.Owner );
+			pickup.Tags.Add( "removable" );
+			pickup.NetworkSpawn();
 
 			if ( pickup.GetComponent<Rigidbody>() is { } rb )
 			{

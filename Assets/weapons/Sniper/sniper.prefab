@@ -86,6 +86,7 @@
           "prefab": "weapons/sniper/sniper.prefab"
         },
         "MaxReserveAmmo": 80,
+        "MuzzleGameObject": null,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -220,7 +221,10 @@
               "_type": "gameobject",
               "go": "7fc2a06a-228c-956d-0177-c95c4cc4df53"
             },
-            "MuzzleEffect": null,
+            "MuzzleEffect": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapon_effects/rifle_muzzleflash.prefab"
+            },
             "MuzzleTransform": {
               "_type": "gameobject",
               "go": "6eb19f59-117b-845c-f066-b84b3bb3ce42"
@@ -237,7 +241,10 @@
               "go": "2ad75b15-d73d-4018-bc22-7407f67f909e",
               "component_type": "SkinnedModelRenderer"
             },
-            "TracerEffect": null
+            "TracerEffect": {
+              "_type": "gameobject",
+              "prefab": "weapons/tracer_rifle.prefab"
+            }
           },
           {
             "__type": "Sandbox.SkinnedModelRenderer",
@@ -353,6 +360,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
+    "facepunch.rifle_muzzleflash#76090",
     "facepunch.w_m700#144907"
   ],
   "__version": 2
