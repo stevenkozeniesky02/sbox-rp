@@ -61,6 +61,7 @@
         "Flags": 0,
         "AllowGovernmentLockpick": true,
         "IsGovernment": false,
+        "IsPublic": false,
         "LockSound": "entities/door/sounds/door_lock.sound",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,

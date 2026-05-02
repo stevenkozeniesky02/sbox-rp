@@ -6,8 +6,8 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Sun",
-      "Position": "-0.004999999,-0.005,0.007071068",
-      "Rotation": "-0.1464466,0.3535534,0.3535534,0.8535534",
+      "Position": "-0.00499999896,-0.00499999989,0.00707106804",
+      "Rotation": "-0.146446601,0.353553414,0.353553414,0.853553414",
       "Scale": "1,1,1",
       "Tags": "light_directional,light",
       "Enabled": true,
@@ -50,7 +50,7 @@
       "Position": "0,0,0",
       "Rotation": "0,0,0,1",
       "Scale": "3,3,1",
-      "Tags": "",
+      "Tags": "world",
       "Enabled": true,
       "NetworkMode": 2,
       "NetworkFlags": 0,
@@ -72,13 +72,11 @@
           "IsTrigger": false,
           "Mesh": {
             "Topology": "H4sIAAAAAAAACk2MCQoAIQzE4qqr//9wJdiCA6WQOQawgcbVBwzgT+bJXi0gIkLeM68q69fXm7n1bsv1a6skN2tH394B6DpJeKAAAAA=",
-            "Position": "0,0,0",
-            "Rotation": "0,0,0,1",
             "Positions": [
-              "-1060.875,-874.5042,0",
-              "1060.875,-874.5042,0",
-              "1060.875,874.5042,0",
-              "-1060.875,874.5042,0"
+              "-1060.875,-874.504211,0",
+              "1060.875,-874.504211,0",
+              "1060.875,874.504211,0",
+              "-1060.875,874.504211,0"
             ],
             "Blends": [
               "0,0,0,0",
@@ -101,26 +99,14 @@
               "0,0,0,0"
             ],
             "TextureCoord": [
-              "8.288086,6.832064",
+              "8.28808594,6.83206415",
               "0,0",
-              "8.288086,-6.832064",
+              "8.28808594,-6.83206415",
               "0,0",
-              "-8.288086,-6.832064",
+              "-8.28808594,-6.83206415",
               "0,0",
-              "-8.288086,6.832064",
+              "-8.28808594,6.83206415",
               "0,0"
-            ],
-            "TextureUAxis": [
-              "1,0,0"
-            ],
-            "TextureVAxis": [
-              "0,-1,0"
-            ],
-            "TextureScale": [
-              "0.7500001,0.7500001"
-            ],
-            "TextureOffset": [
-              "511.9995,0.0002441406"
             ],
             "MaterialIndex": [
               0
@@ -164,7 +150,7 @@
       "__version": 2,
       "Flags": 0,
       "Name": "2D Skybox",
-      "Position": "-822.1129,-811.8079,740.7106",
+      "Position": "-822.112915,-811.807922,740.710571",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
       "Tags": "skybox",
@@ -230,7 +216,7 @@
       "__version": 2,
       "Flags": 0,
       "Name": "area",
-      "Position": "74.78983,-310.0393,148.8729",
+      "Position": "74.7898331,-310.039307,148.872894",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
       "Tags": "",
@@ -289,7 +275,7 @@
               "IdValue": "bbfdcff4-fd41-4668-8527-2b664ccdcf01"
             },
             "Property": "Position",
-            "Value": "223.5547,-254.134,5.619971"
+            "Value": "223.554703,-254.134003,5.6199708"
           }
         ],
         "MovedObjects": []
@@ -322,7 +308,7 @@
               "IdValue": "5c0b2848-2f1a-4821-8b67-7e108b715ca7"
             },
             "Property": "Position",
-            "Value": "145.7535,-231.3019,0.6249993"
+            "Value": "145.753494,-231.301895,0.624999285"
           },
           {
             "Target": {
@@ -330,7 +316,7 @@
               "IdValue": "5c0b2848-2f1a-4821-8b67-7e108b715ca7"
             },
             "Property": "Rotation",
-            "Value": "0,0,-0.7071067,0.7071068"
+            "Value": "0,0,-0.707106709,0.707106829"
           }
         ],
         "MovedObjects": []
@@ -370,7 +356,7 @@
               "IdValue": "5c0b2848-2f1a-4821-8b67-7e108b715ca7"
             },
             "Property": "Position",
-            "Value": "48.02076,-228.1372,0.6249993"
+            "Value": "48.0207596,-228.137207,0.624999285"
           },
           {
             "Target": {
@@ -378,7 +364,7 @@
               "IdValue": "5c0b2848-2f1a-4821-8b67-7e108b715ca7"
             },
             "Property": "Rotation",
-            "Value": "0,0,-0.7071067,0.7071068"
+            "Value": "0,0,-0.707106709,0.707106829"
           },
           {
             "Target": {
@@ -405,6 +391,62 @@
       }
     },
     {
+      "__guid": "2f64f238-b19f-4a65-ab7b-6e2a6aafdc9f",
+      "__version": 2,
+      "__Prefab": "entities/door/roleplay_door.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "5c0b2848-2f1a-4821-8b67-7e108b715ca7"
+            },
+            "Property": "Name",
+            "Value": "roleplay_door (2)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "5c0b2848-2f1a-4821-8b67-7e108b715ca7"
+            },
+            "Property": "Position",
+            "Value": "-203.896118,-228.137222,0.624999285"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "5c0b2848-2f1a-4821-8b67-7e108b715ca7"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,-0.707106709,0.707106829"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "0c2c81fc-beb6-4df7-a04e-de6e3dbff7ae"
+            },
+            "Property": "IsPublic",
+            "Value": true
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "5c0b2848-2f1a-4821-8b67-7e108b715ca7": "2f64f238-b19f-4a65-ab7b-6e2a6aafdc9f",
+        "37ddcf29-6df0-46c6-ac21-9e4c05d34e87": "54b1a867-cd45-4c4d-be8c-273cdffcc4c2",
+        "0c2c81fc-beb6-4df7-a04e-de6e3dbff7ae": "2f10a87d-9b83-4f17-8ba1-fec0a8ba58d5",
+        "012ba01a-c345-4855-be53-6a942c1d21e9": "92826437-5a7b-4f1a-bc51-01e53517b99f",
+        "4c7bf97a-1c50-40b0-8bde-8477712a7fdf": "d7045da4-0ba9-4c0c-9440-f14c47b2648a",
+        "aa7b02ca-2781-4188-af14-7bff30b20362": "640a168a-9a64-4764-9328-4a2272f71048",
+        "363d322d-e56d-422a-aa43-de0ec59d498b": "48d602b8-c25f-4c18-8547-7b60228cd37e",
+        "07f73016-9b45-4a07-861d-1f64c99a547b": "d08e4040-6e34-456a-8cce-6150d95f8b06",
+        "c136a90f-132f-4103-9062-9058b99812ca": "5169bcda-48c3-4725-aa6c-af873ded52d7",
+        "aabc02e6-1395-4ea6-9c20-7126f3b4b807": "b2771c0e-81b4-4505-8019-bfa2ab2f8f1b"
+      }
+    },
+    {
       "__guid": "511bbb25-6907-4548-bdcd-9d34b0d53210",
       "__version": 2,
       "__Prefab": "entities/sents/shatter_glass.prefab",
@@ -418,7 +460,7 @@
               "IdValue": "eb13d793-e834-4af4-bcf7-0cc871c4d1ee"
             },
             "Property": "Position",
-            "Value": "-107.2306,-229.9634,1.999985"
+            "Value": "-107.230598,-229.963394,1.99998498"
           }
         ],
         "MovedObjects": []
@@ -434,7 +476,7 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Mini-Jail",
-      "Position": "49.89932,-258.7983,0.002334595",
+      "Position": "49.8993187,-258.798309,0.00233459496",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
       "Tags": "",
@@ -451,7 +493,7 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Object",
-          "Position": "6.185955,0,0",
+          "Position": "6.18595505,0,0",
           "Rotation": "0,0,0,1",
           "Scale": "1,1,1",
           "Tags": "",
@@ -522,7 +564,7 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Object (1)",
-          "Position": "-57.27087,0,0",
+          "Position": "-57.2708702,0,0",
           "Rotation": "0,0,0,1",
           "Scale": "1,1,1",
           "Tags": "",
@@ -593,8 +635,8 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Object (2)",
-          "Position": "-24.77882,-30.3688,0.00000002956949",
-          "Rotation": "0,0,-0.7071067,0.7071068",
+          "Position": "-24.77882,-30.3687992,2.956949E-08",
+          "Rotation": "0,0,-0.707106709,0.707106829",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -664,7 +706,7 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Jail Zone",
-          "Position": "-24.50478,-4.335602,6.648376",
+          "Position": "-24.5047798,-4.33560181,6.64837599",
           "Rotation": "0,0,0,1",
           "Scale": "1,1,1",
           "Tags": "",
@@ -710,12 +752,18 @@
       "AgentMaxSlope": 40,
       "ExcludedBodies": "",
       "IncludedBodies": "",
+      "DeferGeneration": false,
       "CustomBounds": false
     },
     "GameObjectSystems": {
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "2c96e754-ebbf-48d7-b64f-8ff1238e1710"
+        }
+      },
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
         }
       },
       "Sandbox.MovieMaker.MovieRecorderSystem": {

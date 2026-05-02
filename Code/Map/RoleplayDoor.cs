@@ -17,6 +17,9 @@ public sealed class RoleplayDoor : Component
 	[Property, Sync( SyncFlags.FromHost )]
 	public bool IsGovernment { get; set; }
 
+	[Property, Sync( SyncFlags.FromHost )]
+	public bool IsPublic { get; set; }
+
 	[Property, Sync( SyncFlags.FromHost ), Group( "Lockpick" )]
 	public bool AllowGovernmentLockpick { get; set; } = DefaultAllowGovernmentLockpick;
 
@@ -39,14 +42,23 @@ public sealed class RoleplayDoor : Component
 	}
 
 	public bool IsOwned => Owner is not null;
-	public bool CanBePurchased => !IsGovernment && !IsOwned;
+	public bool CanBePurchased => !IsGovernment && !IsPublic && !IsOwned;
 	bool CanLockpickGovernmentDoor => AllowGovernmentLockpick || DefaultAllowGovernmentLockpick;
 
 	protected override void OnStart()
 	{
-		if ( Networking.IsHost && IsGovernment && Door.IsValid() )
+		if ( !Networking.IsHost || !Door.IsValid() )
+			return;
+
+		if ( IsGovernment )
 		{
 			Door.IsLocked = true;
+			return;
+		}
+
+		if ( IsPublic )
+		{
+			Door.IsLocked = false;
 		}
 	}
 
@@ -120,6 +132,12 @@ public sealed class RoleplayDoor : Component
 			return false;
 		}
 
+		if ( IsPublic )
+		{
+			error = "Public doors can't be bought.";
+			return false;
+		}
+
 		if ( IsOwned )
 		{
 			error = "This door is already owned.";
@@ -161,6 +179,12 @@ public sealed class RoleplayDoor : Component
 			return false;
 		}
 
+		if ( IsPublic )
+		{
+			error = "Public doors can't be sold.";
+			return false;
+		}
+
 		if ( !IsOwnedBy( seller.Network.Owner ) )
 		{
 			error = IsOwned ? "Only the door owner can sell it." : "Buy this door first.";
@@ -192,6 +216,12 @@ public sealed class RoleplayDoor : Component
 		if ( !Networking.IsHost || !actor.IsValid() )
 		{
 			error = "Invalid door lock request.";
+			return false;
+		}
+
+		if ( IsPublic )
+		{
+			error = "Public doors can't be locked.";
 			return false;
 		}
 
@@ -296,6 +326,12 @@ public sealed class RoleplayDoor : Component
 			return false;
 		}
 
+		if ( IsPublic )
+		{
+			error = "Public doors can't be lockpicked.";
+			return false;
+		}
+
 		if ( IsGovernment )
 		{
 			if ( !CanLockpickGovernmentDoor )
@@ -327,6 +363,12 @@ public sealed class RoleplayDoor : Component
 		var isOwner = player.IsValid() && IsOwnedBy( player.Network.Owner );
 		var title = Door.IsLocked ? "Locked" : state == Door.DoorState.Open ? "Close" : "Open";
 		var icon = Door.IsLocked ? "lock" : "door_front";
+
+		if ( IsPublic )
+		{
+			title = state == Door.DoorState.Open ? "Close" : "Open";
+			return new IPressable.Tooltip( title, "door_front", "Public door" );
+		}
 
 		if ( IsGovernment )
 		{
@@ -385,6 +427,9 @@ public sealed class RoleplayDoor : Component
 		if ( IsGovernment )
 			return CanAccessGovernmentDoor( player );
 
+		if ( IsPublic )
+			return false;
+
 		return IsOwnedBy( player.Network.Owner );
 	}
 
@@ -394,7 +439,10 @@ public sealed class RoleplayDoor : Component
 			return false;
 
 		if ( Door.IsLocked )
-			return false;
+			return IsPublic;
+
+		if ( IsPublic )
+			return true;
 
 		if ( IsGovernment )
 		{
