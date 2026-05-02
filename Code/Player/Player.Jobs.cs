@@ -138,10 +138,10 @@ public sealed partial class Player
 
 		SetJobDefinition( definition );
 
-		var inventory = GetComponent<PlayerInventory>();
-		if ( inventory.IsValid() )
+		var loadout = GetComponent<PlayerLoadout>();
+		if ( loadout.IsValid() )
 		{
-			await inventory.ApplyJobLoadoutAsync( definition.StartingItems ?? [] );
+			await loadout.ApplyJobLoadoutAsync( definition.StartingItems ?? [] );
 		}
 
 		await ApplyJobClothingAsync( definition );
