@@ -5,12 +5,14 @@
   "AccentColor": "0.9059,0.3569,0.3569,1",
   "Salary": 60,
   "MaxPlayers": 6,
+  "RequiresVote": false,
   "Command": "/thief",
   "Order": 45,
   "StartingItems": [
-    "weapons/lockpick/lockpick.prefab",
-    "weapons/crowbar/crowbar.prefab"
+    "weapons/lockpick/lockpick.prefab"
   ],
+  "UseOwnerAvatarAppearance": false,
+  "PreserveOwnerAvatarAppearance": true,
   "Clothing": [
     "models/citizen_clothes/hat/beanie/beanie_black.clothing",
     "models/citizen_clothes/jacket/hoodie/hoodie_black.clothing",
