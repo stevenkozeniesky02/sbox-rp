@@ -89,6 +89,7 @@ public class WheelTool : ToolMode
 	[Rpc.Host]
 	public void SpawnWheel( SelectionPoint point, WheelDefinition def, Transform tx, bool reversed )
 	{
+		if ( !CanUseToolOn( point ) ) return;
 		if ( def == null || def.Prefab?.GetScene() is not Scene scene ) return;
 		if ( !TryUseToolSpawnLimit() ) return;
 		if ( !TryUseToolActionCooldown() ) return;

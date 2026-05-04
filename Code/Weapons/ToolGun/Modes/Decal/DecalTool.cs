@@ -52,6 +52,7 @@ public class DecalTool : ToolMode
 	[Rpc.Host]
 	public void SpawnDecal( SelectionPoint point, DecalDefinition def )
 	{
+		if ( !CanUseToolOn( point ) ) return;
 		if ( def == null ) return;
 		if ( !TryUseToolSpawnLimit() ) return;
 		if ( !TryUseToolActionCooldown() ) return;

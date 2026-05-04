@@ -192,6 +192,9 @@ public class Weld : BaseConstraintToolMode
 	[Rpc.Host( NetFlags.OwnerOnly )]
 	private void CreateRotatedWeld( SelectionPoint point1, SelectionPoint point2, float angle )
 	{
+		if ( !CanUseToolOn( point1 ) || !CanUseToolOn( point2 ) )
+			return;
+
 		if ( !point1.GameObject.IsValid() || !point2.GameObject.IsValid() )
 		{
 			Log.Warning( "Tried to create invalid constraint" );

@@ -335,6 +335,7 @@ public class StackerTool : ToolMode
 	private void SpawnStack( GameObject target )
 	{
 		if ( !target.IsValid() ) return;
+		if ( !CanUseToolOn( target ) ) return;
 
 		var root = ResolveRoot( target );
 		if ( root.Tags.Contains( "constraint" ) ) return;

@@ -72,6 +72,8 @@
 
 		if ( sp.IsValid() )
 		{
+			if ( !CanUseToolOn( sp ) ) return default;
+
 			// Ask the object if it allows toolgun interaction (Ownable and others can reject via IToolgunEvent)
 			var selectEvent = new IToolgunEvent.SelectEvent { User = Player.Network.Owner };
 			sp.GameObject.Root.RunEvent<IToolgunEvent>( x => x.OnToolgunSelect( selectEvent ) );
@@ -90,6 +92,29 @@
 		if ( !player.IsValid() ) return default;
 
 		return TraceFromRay( player.EyeTransform.ForwardRay, 4096, player.GameObject );
+	}
+
+	protected bool CanUseToolOn( SelectionPoint point )
+	{
+		return point.IsValid() && CanUseToolOn( point.GameObject );
+	}
+
+	protected bool CanUseToolOn( GameObject go )
+	{
+		if ( !go.IsValid() )
+			return false;
+
+		if ( go.Tags.Has( "world" ) )
+			return true;
+
+		var caller = Rpc.Caller ?? Player?.Network.Owner;
+		if ( caller is null )
+			return false;
+
+		if ( caller.IsHost || AdminSystem.Current?.HasAdminAccess( caller ) == true )
+			return true;
+
+		return ObjectAccess.TryGetOwnable( go, out var ownable ) && ownable.Owner == caller;
 	}
 
 	/// <summary>

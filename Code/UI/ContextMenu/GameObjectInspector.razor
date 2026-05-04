@@ -16,6 +16,7 @@
             {
                 var totalMass = Target.SelectMany( go => go.GetComponentsInChildren<Rigidbody>() ).Sum( ResolveMass );
                 var health = Target.Select( go => go.GetComponent<Prop>() ).FirstOrDefault( p => p.IsValid() );
+                var canEdit = CanEditTarget();
 
                 <div class="object-info">
                     @if ( totalMass > 0 )
@@ -27,9 +28,12 @@
                         <span>❤️ @($"{health.Health:0.#} HP")</span>
                     }
                 </div>
-                <ControlSheet Target="@Properties"></ControlSheet>
+                @if ( canEdit )
+                {
+                    <ControlSheet Target="@Properties"></ControlSheet>
+                }
 
-                @if (Renderers.Count > 0)
+                @if (canEdit && Renderers.Count > 0)
                 {
                     @if ( MaterialGroups.Count > 1 )
                     {
@@ -124,6 +128,7 @@
     protected override int BuildHash()
     {
         var hc = new HashCode();
+        hc.Add( CanEditTarget() );
         foreach ( var go in Target ?? [] )
         {
             hc.Add( go.Id );
@@ -152,6 +157,11 @@
         {
             CollectProperties(c.ToArray());
         }
+    }
+
+    bool CanEditTarget()
+    {
+        return Target is { Count: > 0 } && Target.All( go => ObjectAccess.CanLocalPlayerModifyOwnedObject( go ) );
     }
 
     bool HasEditableProperties(Type type, PropertyDescription[] properties)
@@ -223,6 +233,9 @@
 
     void PropertyChanged(SerializedProperty prop)
     {
+        if ( !CanEditTarget() )
+            return;
+
         foreach (var c in prop.Parent.Targets)
         {
             if (c is Component component)
@@ -232,6 +245,9 @@
 
     void PickMaterialGroup()
     {
+        if ( !CanEditTarget() )
+            return;
+
         var menu = MenuPanel.Open( this );
         var current = Renderers[0].MaterialGroup ?? MaterialGroups.FirstOrDefault();
         foreach ( var group in MaterialGroups )
@@ -243,12 +259,18 @@
 
     void SetMaterialGroup( string group )
     {
+        if ( !CanEditTarget() )
+            return;
+
         foreach ( var renderer in Renderers )
             GameManager.ChangeProperty( renderer, nameof( ModelRenderer.MaterialGroup ), group );
     }
 
     void PickMaterial(int index)
     {
+        if ( !CanEditTarget() )
+            return;
+
         var accessor = Renderers[0].Materials;
         var mat = accessor.HasOverride(index) ? accessor.GetOverride(index) : accessor.GetOriginal(index);
 
@@ -262,12 +284,18 @@
 
     void SetMaterialOverride(int index, string path)
     {
+        if ( !CanEditTarget() )
+            return;
+
         foreach (var renderer in Renderers)
             GameManager.ChangeMaterialOverride(renderer, index, path);
     }
 
     void RevertMaterial(int index)
     {
+        if ( !CanEditTarget() )
+            return;
+
         foreach (var renderer in Renderers)
             GameManager.ChangeMaterialOverride(renderer, index, null);
     }

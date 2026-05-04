@@ -36,6 +36,7 @@ public sealed class Ownable : Component, IPhysgunEvent, IToolgunEvent
 	public static bool OwnershipChecks { get; set; } = false;
 
 	internal bool CallerHasAccess( Connection caller ) => HasAccess( caller, Owner );
+	internal bool CallerHasToolgunAccess( Connection caller ) => HasProtectedAccess( caller, Owner );
 
 	static bool HasPhysgunAccess( Connection caller, Connection owner, bool pulling )
 	{
@@ -57,9 +58,14 @@ public sealed class Ownable : Component, IPhysgunEvent, IToolgunEvent
 	public static bool HasAccess( Connection caller, Connection owner )
 	{
 		if ( !OwnershipChecks ) return true;
+		return HasProtectedAccess( caller, owner );
+	}
+
+	public static bool HasProtectedAccess( Connection caller, Connection owner )
+	{
 		if ( caller is null ) return false;
 		if ( AdminSystem.Current?.HasAdminAccess( caller ) == true ) return true;
-		if ( owner is null ) return true;
+		if ( owner is null ) return false;
 		return owner == caller;
 	}
 
@@ -71,7 +77,7 @@ public sealed class Ownable : Component, IPhysgunEvent, IToolgunEvent
 
 	void IToolgunEvent.OnToolgunSelect( IToolgunEvent.SelectEvent e )
 	{
-		if ( !CallerHasAccess( e.User ) )
+		if ( !CallerHasToolgunAccess( e.User ) )
 			e.Cancelled = true;
 	}
 }

@@ -85,6 +85,9 @@ public class ThrusterTool : ToolMode
 	[Rpc.Host]
 	public void Spawn( SelectionPoint point, PrefabFile thrusterPrefab, Transform tx, bool noWeld )
 	{
+		if ( !CanUseToolOn( point ) )
+			return;
+
 		if ( thrusterPrefab == null )
 			return;
 		if ( !TryUseToolSpawnLimit() )

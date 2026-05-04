@@ -41,6 +41,7 @@ public class Remover : ToolMode
 		go = go?.Network?.RootGameObject;
 
 		if ( !CanDestroy( go ) ) return;
+		if ( !CanUseToolOn( go ) ) return;
 		if ( go.IsProxy ) return;
 
 		go.Destroy();

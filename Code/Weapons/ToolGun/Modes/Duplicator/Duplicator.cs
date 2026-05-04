@@ -154,10 +154,24 @@ public partial class Duplicator : ToolMode
 	[Rpc.Host]
 	public void Copy( GameObject obj, Transform selectionAngle, bool additive )
 	{
+		if ( !CanUseToolOn( obj ) )
+			return;
+
+		var copiedObjects = new LinkedGameObjectBuilder { RejectPlayers = true };
+		copiedObjects.AddConnected( obj );
+		copiedObjects.RemoveDeletedObjects();
+
+		if ( copiedObjects.Objects.Any( x => !CanUseToolOn( x ) ) )
+			return;
+
 		if ( !additive )
 			builder.Clear();
 
-		builder.AddConnected( obj );
+		foreach ( var copiedObject in copiedObjects.Objects )
+		{
+			builder.Add( copiedObject );
+		}
+
 		builder.RemoveDeletedObjects();
 
 		var tempDupe = DuplicationData.CreateFromObjects( builder.Objects, selectionAngle );

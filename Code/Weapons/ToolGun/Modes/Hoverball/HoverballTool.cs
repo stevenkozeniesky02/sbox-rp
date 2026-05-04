@@ -57,6 +57,9 @@ public class HoverballTool : ToolMode
 	[Rpc.Host]
 	public void Spawn( SelectionPoint point, PrefabFile hoverballPrefab, Transform tx )
 	{
+		if ( !CanUseToolOn( point ) )
+			return;
+
 		if ( hoverballPrefab == null )
 			return;
 		if ( !TryUseToolSpawnLimit() )

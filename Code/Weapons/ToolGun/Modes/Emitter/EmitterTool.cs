@@ -68,6 +68,9 @@ public class EmitterTool : ToolMode
 	[Rpc.Host]
 	public void Spawn( SelectionPoint point, PrefabFile emitterPrefab, ScriptedEmitter effect, Transform tx )
 	{
+		if ( !CanUseToolOn( point ) )
+			return;
+
 		if ( emitterPrefab == null )
 			return;
 		if ( !TryUseToolSpawnLimit() )

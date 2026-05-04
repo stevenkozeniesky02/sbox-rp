@@ -138,6 +138,9 @@
 	[Rpc.Host( NetFlags.OwnerOnly )]
 	private void Create( SelectionPoint point1, SelectionPoint point2 )
 	{
+		if ( !CanUseToolOn( point1 ) || !CanUseToolOn( point2 ) )
+			return;
+
 		if ( !UpdateValidity( point1, point2 ) )
 		{
 			Log.Warning( "Tried to create invalid constraint" );
@@ -157,6 +160,9 @@
 	[Rpc.Host( NetFlags.OwnerOnly )]
 	private void RemoveConstraints( GameObject go )
 	{
+		if ( !CanUseToolOn( go ) )
+			return;
+
 		if ( !TryUseToolActionCooldown() )
 			return;
 

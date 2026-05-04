@@ -41,6 +41,9 @@
 
     void QueueMorphChange( string name, float value )
     {
+        if ( !CanEditTarget() )
+            return;
+
         _pendingMorphs[name] = value;
         _lastMorphEdit = 0;
     }
@@ -64,6 +67,9 @@
         SkinnedModelRenderer smr = null;
         foreach (var go in selection)
         {
+            if ( !ObjectAccess.CanLocalPlayerModifyOwnedObject( go ) )
+                continue;
+
             var found = go.GetComponentInChildren<SkinnedModelRenderer>();
             if (found?.Morphs?.Names?.Length > 0) { smr = found; break; }
         }
@@ -113,8 +119,14 @@
         (row.NameB != null && (Target.SceneModel.Morphs.Get(row.NameB) > 0f))
     );
 
+    bool CanEditTarget()
+    {
+        return Target.IsValid() && ObjectAccess.CanLocalPlayerModifyOwnedObject( Target.GameObject );
+    }
+
     void ClearAll()
     {
+        if ( !CanEditTarget() ) return;
         if (!Target.IsValid() || Target.Morphs?.Names == null) return;
 
         _pendingMorphs.Clear();
@@ -129,6 +141,7 @@
 
     void Randomize()
     {
+        if ( !CanEditTarget() ) return;
         if (!Target.IsValid() || Target.Morphs?.Names is not { Length: > 0 }) return;
 
         _pendingMorphs.Clear();
@@ -166,6 +179,7 @@
 
     void SaveNewPreset( string name )
     {
+        if ( !CanEditTarget() ) return;
         if ( !Target.IsValid() || Target.Morphs?.Names == null ) return;
 
         var morphs = Target.Morphs.Names.ToDictionary( n => n, n => Target.SceneModel.Morphs.Get( n ) );
@@ -178,6 +192,7 @@
 
     void ApplyPreset( FacePosePreset preset )
     {
+        if ( !CanEditTarget() ) return;
         if ( !Target.IsValid() ) return;
 
         foreach ( var (name, val) in preset.Morphs )

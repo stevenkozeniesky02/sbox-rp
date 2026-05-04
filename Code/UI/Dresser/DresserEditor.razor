@@ -27,6 +27,7 @@
         foreach (var go in selection)
         {
             if ( go.Tags.Has( "player" ) ) continue;
+            if ( !ObjectAccess.CanLocalPlayerModifyOwnedObject( go ) ) continue;
             found = go.GetComponentInChildren<Dresser>();
             if (found != null) break;
         }
@@ -38,13 +39,23 @@
         return Target != null;
     }
 
-    void DoRandomize() => TryBroadcastRandomize( Target.GameObject );
-    void DoClear() => TryBroadcastClear( Target.GameObject );
+    void DoRandomize()
+    {
+        if ( Target.IsValid() && ObjectAccess.CanLocalPlayerModifyOwnedObject( Target.GameObject ) )
+            TryBroadcastRandomize( Target.GameObject );
+    }
+
+    void DoClear()
+    {
+        if ( Target.IsValid() && ObjectAccess.CanLocalPlayerModifyOwnedObject( Target.GameObject ) )
+            TryBroadcastClear( Target.GameObject );
+    }
 
     [Rpc.Host]
     private static void TryBroadcastRandomize(GameObject go)
     {
         if ( !go.IsValid() ) return;
+        if ( !ObjectAccess.CanModifyOwnedObject( go, Rpc.Caller ) ) return;
 
         var dresser = go.GetComponentInChildren<Dresser>();
         if ( dresser is null ) return;
@@ -59,6 +70,7 @@
     private static async void TryBroadcastClear(GameObject go)
     {
         if ( !go.IsValid() ) return;
+        if ( !ObjectAccess.CanModifyOwnedObject( go, Rpc.Caller ) ) return;
 
         var dresser = go.GetComponentInChildren<Dresser>();
         if ( dresser is null ) return;
