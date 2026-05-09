@@ -56,16 +56,20 @@ public class MeleeWeapon : BaseCarryable
 
 		var forward = AimRay.Forward;
 
-		var tr = Scene.Trace.Ray( AimRay with { Forward = forward }, Range )
+		var trace = Scene.Trace.Ray( AimRay with { Forward = forward }, Range )
 							.IgnoreGameObjectHierarchy( AimIgnoreRoot )
 							.WithoutTags( "playercontroller" )
-							.Radius( SwingRadius )
-							.UseHitboxes()
-							.Run();
+							.UseHitboxes();
+
+		var tr = trace.Run();
+		if ( !tr.Hit )
+		{
+			tr = trace.Radius( SwingRadius ).Run();
+		}
 
 		timeUntilSwing = tr.GameObject.IsValid() ? SwingDelay : MissSwingDelay;
 
-		SwingEffects( tr.EndPosition, tr.Hit, tr.Normal, tr.GameObject, tr.Surface );
+		SwingEffects( tr.HitPosition, tr.Hit, tr.Normal, tr.GameObject, tr.Surface );
 		TraceAttack( TraceAttackInfo.From( tr, Damage, localise: false ) );
 
 		player.Controller.EyeAngles += new Angles( Random.Shared.Float( -0.2f, -0.3f ), Random.Shared.Float( -0.1f, 0.1f ), 0 );
