@@ -93,15 +93,14 @@ public class MeleeWeapon : BaseCarryable
 
 		GameObject.PlaySound( SwingSound );
 
-		if ( hitObject.IsValid() )
-			GameObject.PlaySound( HitSound );
-
 		if ( !hit || !hitObject.IsValid() )
 			return;
 
-		var prefab = hitSurface.PrefabCollection.BulletImpact ?? hitSurface.GetBaseSurface()?.PrefabCollection.BulletImpact;
+		hitObject.PlaySound(
+			hitSurface.SoundCollection.ImpactHard ?? hitSurface.GetBaseSurface()?.SoundCollection.ImpactHard ?? HitSound,
+			hitObject.WorldTransform.PointToLocal( hitpoint ) );
 
-		// Still null?
+		var prefab = hitSurface.PrefabCollection.BulletImpact ?? hitSurface.GetBaseSurface()?.PrefabCollection.BulletImpact;
 		if ( prefab is null )
 			return;
 
