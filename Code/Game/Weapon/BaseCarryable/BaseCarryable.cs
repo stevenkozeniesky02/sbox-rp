@@ -266,14 +266,7 @@ public partial class BaseCarryable : Component, IKillIcon
 	{
 		if ( player is null ) return;
 
-		if ( !player.Controller.ThirdPerson )
-		{
-			CreateViewModel();
-		}
-		else
-		{
-			DestroyViewModel();
-		}
+		CreateViewModel();
 
 		GameObject.Network.Interpolation = false;
 	}
