@@ -26,16 +26,17 @@ Git is the bridge between Mac and PC. Don't try to share files any other way.
 2. `git push` from the working machine.
 3. `git pull` on the Linux PC.
 4. Build and test in s&box editor (Proton).
-5. Publish package to sbox.game as `stevenkozeniesky02/rp`.
-6. In Physgun panel → S&box Packages → apply `stevenkozeniesky02.rp`.
+5. Publish package to sbox.game as `obsidianrp/rp`.
+6. In Physgun panel → S&box Packages → apply `obsidianrp.rp`.
 7. Restart server, test.
 
 ## Current state
 
 - Forked from sousou63/DarkRP at commit `b90cdc9`.
-- Rebrand commit `d01b718`: `sandbox.sbproj` Org/Ident/Title updated to ours.
+- Rebrand commit `d01b718`: `sandbox.sbproj` Org/Ident/Title updated.
 - Final gamemode name is **deferred** — placeholder `Title: "RP (working title)"`.
-- Not yet published to sbox.game.
+- **Published** to sbox.game on 2026-05-13 as `obsidianrp/rp` (org: `obsidianrp`).
+- Not yet swapped on Physgun server.
 
 ## Direction (decided in initial planning)
 
