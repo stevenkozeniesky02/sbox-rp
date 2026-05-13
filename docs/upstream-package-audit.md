@@ -12,12 +12,17 @@ Living list of sbox.game packages + Facepunch upstream code we'd **reference ins
 | Money printer base | `Code/Player/Player.MoneyPrinters.cs` | sousou63's port (tier/upgrade ladder is our extension job in Phase D) |
 | Job framework | `Code/Jobs/` + `Assets/jobs/*.jobdef` | sousou63's port |
 
-## To search on sbox.game (Phase A audit task)
+## Mounted via `PackageReferences` in `sandbox.sbproj`
+
+| Package | Feature | Notes |
+|---|---|---|
+| `sanboxstore.realistic_lockpick` | Lockpick weapon + minigame | Added 2026-05-13. Picked from sbox.game search. Verify in editor after first reload that components/assets are available. |
+| `null.duplicator` | Duplicator / CopyPaste tool | Added 2026-05-13. Picked from sbox.game search. Verify in editor that the toolgun mode shows up. |
+
+## Still to search
 
 | Feature | Status | Notes |
 |---|---|---|
-| Lockpick (minigame + sound + cooldown) | TODO — search sbox.game for `lockpick` | If a good package exists, add via `PackageReferences` in `sandbox.sbproj`. Otherwise plan to build in Phase D. |
-| Duplicator / CopyPaste | TODO — search Facepunch sandbox source | Probably in upstream sandbox; mount it. |
 | Chess engine (minimax + alpha-beta) | TODO — search for chess libraries | Only needed if we build the chess NPC; defer past v1. |
 | YouTube/audio resolver (Cobalt-style) | TODO | For DJ boombox; would need our own API key infrastructure. Skip for v1. |
 

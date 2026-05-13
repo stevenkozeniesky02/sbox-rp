@@ -1,12 +1,15 @@
 {
-  "Title": "RP (working title)",
+  "Title": "ObsidianRP",
   "Type": "game",
   "Org": "obsidianrp",
   "Ident": "rp",
   "Schema": 1,
   "IncludeSourceFiles": false,
   "Resources": "/fonts/*\n/UI/*.png\n/ui/*.png\n/ui/*\n/ui/weapons/melee/*",
-  "PackageReferences": [],
+  "PackageReferences": [
+    "sanboxstore.realistic_lockpick",
+    "null.duplicator"
+  ],
   "EditorReferences": null,
   "Mounts": [],
   "IsStandaloneOnly": false,
