@@ -1,44 +1,28 @@
-# DarkRP for S&Box
+# RP (working title)
 
-DarkRP is an open-source project aimed at recreating the DarkRP experience in S&box with a modular and maintainable architecture.
-It is based on a fork of the official Sandbox mode, meaning it behaves very similarly to Garry’s Mod: you can use standard Sandbox entities, with a roleplay layer built on top.
-I don’t plan to maintain this project indefinitely, but my goal is to create a clean, solid, and reusable foundation.
+A work-in-progress s&box roleplay gamemode. Private fork — name TBD.
 
-You can try it in-game here: https://sbox.game/sousoup/darkrp2
+Built on top of the open-source DarkRP port by [sousou63/DarkRP](https://github.com/sousou63/DarkRP),
+which is itself a fork of [Facepunch/sandbox](https://github.com/Facepunch/sandbox).
 
-## Contributors
+## Status
 
-Thanks to all current and future contributors for your time, ideas, and contributions to the project.
+Pre-release. Not yet published to sbox.game under this org/ident.
 
----
+## Building
 
-<div align="center">
-  <a href="https://github.com/Facepunch/sandbox">
-    <img src="https://cdn.sbox.game/org/facepunch/sandbox/thumb/8d0a5169-0ce3-4520-b9e7-23bcafddf7fc.png" alt="Logo" width="450">
-  </a>
-
-  <h3 align="center">Sandbox</h3>
-
-  <p align="center">
-    Our multiplayer sandbox built with the tools provided by <a href="https://sbox.facepunch.com">s&box</a>.
-    <br />
-    <a href="https://sbox.game/facepunch/sandbox"><strong>Play now »</strong></a>
-  </p>
-</div>
-<br/>
-
-https://github.com/user-attachments/assets/f68c7011-6560-49c3-9d3a-ce2411885d08
+1. Open `sandbox.sbproj` in the s&box editor.
+2. Build via the editor.
+3. Publish to sbox.game using your org/ident set in `sandbox.sbproj`.
 
 ## License
 
-Feel free to learn and use parts in your own s&box games.
+[MIT](LICENSE) — Copyright (c) 2026 Facepunch (base engine and sandbox gamemode).
+Modifications by contributors retain MIT.
 
-[MIT](LICENSE) - Copyright (c) 2026 Facepunch
+## Upstream
 
-## Pull Requests
+- DarkRP fork: <https://github.com/sousou63/DarkRP>
+- Sandbox base: <https://github.com/Facepunch/sandbox>
 
-We accept pull requests, but ensure that you're using the same coding style and standards as us. We reserve the right to reject any pull request. Feel free to fork if you wish.
-
-## Issues
-
-If you encounter any bugs, feel free to make an issue. Make sure that the issue doesn't already exist before making one.
+Run `git fetch upstream && git merge upstream/main` to pull in upstream changes.
