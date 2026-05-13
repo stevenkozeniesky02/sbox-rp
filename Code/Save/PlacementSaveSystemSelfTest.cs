@@ -32,9 +32,9 @@ internal sealed class PlacementSaveSystemSelfTest : GameObjectSystem<PlacementSa
 		fake.Save( sample );
 		var loaded = fake.Load();
 
-		Log.Assert( loaded.Count == 2, "PlacementSaveSystem round-trip count mismatch" );
-		Log.Assert( loaded[0].Value == 7, "PlacementSaveSystem round-trip Value mismatch" );
-		Log.Assert( loaded[1].Tag == "beta", "PlacementSaveSystem round-trip Tag mismatch" );
+		Assert.True( loaded.Count == 2, "PlacementSaveSystem round-trip count mismatch" );
+		Assert.True( loaded[0].Value == 7, "PlacementSaveSystem round-trip Value mismatch" );
+		Assert.True( loaded[1].Tag == "beta", "PlacementSaveSystem round-trip Tag mismatch" );
 
 		FileSystem.Data.DeleteFile( "selftest/fakesave.json" );
 		Log.Info( "[PlacementSaveSystem] self-test PASSED" );

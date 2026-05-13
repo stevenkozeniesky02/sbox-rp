@@ -26,7 +26,7 @@
 | `docs/upstream-package-audit.md` | Create | Lookup list for sbox.game packages we'd reference instead of reimplementing. |
 | `ROADMAP.md` | (already created) | Strategic map. |
 
-The two `*SelfTest.cs` files are temporary scaffolding to give us **TDD-like guardrails inside s&box's runtime** — they `Log.Assert` on construction and remove themselves from real builds via `#if DEBUG`. Cheap, no test framework needed.
+The two `*SelfTest.cs` files are temporary scaffolding to give us **TDD-like guardrails inside s&box's runtime** — they `Assert.True` on construction and remove themselves from real builds via `#if DEBUG`. Cheap, no test framework needed.
 
 ---
 
@@ -77,9 +77,9 @@ internal sealed class PlacementSaveSystemSelfTest : GameObjectSystem<PlacementSa
 		fake.Save( sample );
 		var loaded = fake.Load();
 
-		Log.Assert( loaded.Count == 2, "PlacementSaveSystem round-trip count mismatch" );
-		Log.Assert( loaded[0].Value == 7, "PlacementSaveSystem round-trip Value mismatch" );
-		Log.Assert( loaded[1].Tag == "beta", "PlacementSaveSystem round-trip Tag mismatch" );
+		Assert.True( loaded.Count == 2, "PlacementSaveSystem round-trip count mismatch" );
+		Assert.True( loaded[0].Value == 7, "PlacementSaveSystem round-trip Value mismatch" );
+		Assert.True( loaded[1].Tag == "beta", "PlacementSaveSystem round-trip Tag mismatch" );
 
 		FileSystem.Data.DeleteFile( "selftest/fakesave.json" );
 		Log.Info( "[PlacementSaveSystem] self-test PASSED" );
@@ -172,7 +172,7 @@ In s&box editor: File → Reload Project. Wait for compile. Open `Code/Save/Plac
 
 Press ▶ Play. In the **Console** tab look for the log line `[PlacementSaveSystem] self-test PASSED`. Stop play.
 
-If you see `Log.Assert` failures instead, the round-trip is broken — read the message, fix the impl, repeat.
+If you see `Assert.True` failures instead, the round-trip is broken — read the message, fix the impl, repeat.
 
 - [ ] **Step 5: Commit**
 
@@ -230,17 +230,17 @@ internal sealed class JobCacheSelfTest : GameObjectSystem<JobCacheSelfTest>
 		_factoryCalls = 0;
 
 		var first = JobCache.Get( "test-key", 0.5f, Factory );
-		Log.Assert( first.Count == 2, "JobCache.Get returned wrong count on first call" );
-		Log.Assert( _factoryCalls == 1, "JobCache.Get should call factory on first miss" );
+		Assert.True( first.Count == 2, "JobCache.Get returned wrong count on first call" );
+		Assert.True( _factoryCalls == 1, "JobCache.Get should call factory on first miss" );
 
 		var second = JobCache.Get( "test-key", 0.5f, Factory );
-		Log.Assert( _factoryCalls == 1, "JobCache.Get should hit cache within TTL (no second factory call)" );
-		Log.Assert( second.Count == 2, "JobCache cached value count mismatch" );
+		Assert.True( _factoryCalls == 1, "JobCache.Get should hit cache within TTL (no second factory call)" );
+		Assert.True( second.Count == 2, "JobCache cached value count mismatch" );
 
 		JobCache.Invalidate( "test-key" );
 		var third = JobCache.Get( "test-key", 0.5f, Factory );
-		Log.Assert( _factoryCalls == 2, "JobCache.Get should call factory after Invalidate" );
-		Log.Assert( third.Count == 2, "JobCache post-invalidate count mismatch" );
+		Assert.True( _factoryCalls == 2, "JobCache.Get should call factory after Invalidate" );
+		Assert.True( third.Count == 2, "JobCache post-invalidate count mismatch" );
 
 		Log.Info( "[JobCache] self-test PASSED" );
 	}
@@ -308,7 +308,7 @@ public static class JobCache
 
 - [ ] **Step 4: Verify self-test passes**
 
-In editor: reload project, ▶ Play. Watch Console for `[JobCache] self-test PASSED`. If any `Log.Assert` fires, fix and retry.
+In editor: reload project, ▶ Play. Watch Console for `[JobCache] self-test PASSED`. If any `Assert.True` fires, fix and retry.
 
 - [ ] **Step 5: Commit**
 
