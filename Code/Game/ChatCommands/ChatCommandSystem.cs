@@ -108,12 +108,16 @@ public sealed class ChatCommandDefinition
 public static class ChatCommandSystem
 {
 	const int MaxSuggestions = 6;
+	const int RollMaxCap = 1_000_000;
 
 	static readonly ChatCommandDefinition[] StaticCommands =
 	[
 		new( "advert", "/advert <message>", "Broadcast an advert message.", AdvertCommand, aliases: ["ad"] ),
 		new( "ooc", "/ooc <message>", "Talk out of character.", OocCommand, aliases: ["//"] ),
 		new( "me", "/me <action>", "Describe a roleplay action.", MeCommand ),
+		new( "roll", "/roll [max]", "Roll a die from 1 to max (default 100).", RollCommand ),
+		new( "ticket", "/ticket <issue>", "Open a ticket for the admin team.", TicketCommand ),
+		new( "report", "/report <player> <reason>", "Report a player to the admin team.", ReportCommand ),
 		new( "pm", "/pm <player> <message>", "Send a private message.", PrivateMessageCommand, aliases: ["msg", "tell", "w"] ),
 		new( "dropmoney", "/dropmoney <amount>", "Drop money in front of you.", DropMoneyCommand, aliases: ["dropcash"] ),
 		new( "name", "/name <rp name>", "Change your roleplay name.", NameCommand, aliases: ["rpname", "nick"] ),
@@ -446,6 +450,67 @@ public static class ChatCommandSystem
 		}
 
 		context.Broadcast( $"* {context.Player.DisplayName} {context.ArgumentsText}", "*" );
+	}
+
+	static void RollCommand( ChatCommandContext context )
+	{
+		var max = 100;
+		if ( context.Arguments.Count >= 1 )
+		{
+			if ( !int.TryParse( context.Arguments[0], out var parsedMax ) || parsedMax < 2 )
+			{
+				context.Reply( "Usage: /roll [max] (max must be >= 2, default 100)", "!" );
+				return;
+			}
+
+			max = Math.Min( parsedMax, RollMaxCap );
+		}
+
+		var roll = Game.Random.Int( 1, max );
+		context.Broadcast( $"* {context.Player.DisplayName} rolls {roll} (1-{max})", "*" );
+	}
+
+	static void TicketCommand( ChatCommandContext context )
+	{
+		if ( string.IsNullOrWhiteSpace( context.ArgumentsText ) )
+		{
+			context.Reply( "Usage: /ticket <issue>", "!" );
+			return;
+		}
+
+		SendToAdmins( context.Chat, $"[Ticket] {context.Player.DisplayName}: {context.ArgumentsText}", "?" );
+		context.Reply( "Ticket submitted. An admin will respond when available.", "?" );
+	}
+
+	static void ReportCommand( ChatCommandContext context )
+	{
+		if ( !TryReadPlayerAndRest( context, out var target, out var reason ) )
+			return;
+
+		if ( string.IsNullOrWhiteSpace( reason ) )
+		{
+			context.Reply( "Usage: /report <player> <reason>", "!" );
+			return;
+		}
+
+		SendToAdmins( context.Chat, $"[Report] {context.Player.DisplayName} reported {target.DisplayName}: {reason}", "!" );
+		context.Reply( $"Report against {target.DisplayName} submitted.", "!" );
+	}
+
+	static void SendToAdmins( Chat chat, string message, string icon )
+	{
+		if ( chat is null )
+			return;
+
+		var players = Game.ActiveScene.GetAll<Player>()
+			.Where( x => x.IsValid() && x.Network.Owner is not null )
+			.ToArray();
+
+		foreach ( var player in players )
+		{
+			if ( player.HasAdminAccess || player.Network.Owner.IsHost )
+				chat.AddSystemTextTo( player.Network.Owner, message, icon );
+		}
 	}
 
 	static void PrivateMessageCommand( ChatCommandContext context )
