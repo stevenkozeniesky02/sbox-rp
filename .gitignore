@@ -28,3 +28,6 @@ code/Properties/*
 Exports/
 *.user
 *.slnx
+
+# MauveRP reference (Aventured LLC, copyrighted) — never commit into this fork
+mauverp-reference/

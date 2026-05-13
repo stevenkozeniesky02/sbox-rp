@@ -35,8 +35,9 @@ Git is the bridge between Mac and PC. Don't try to share files any other way.
 - Forked from sousou63/DarkRP at commit `b90cdc9`.
 - Rebrand commit `d01b718`: `sandbox.sbproj` Org/Ident/Title updated.
 - Final gamemode name is **deferred** — placeholder `Title: "RP (working title)"`.
-- **Published** to sbox.game on 2026-05-13 as `obsidianrp/rp` (org: `obsidianrp`).
-- Not yet swapped on Physgun server.
+- **Published** to sbox.game on 2026-05-13 as `obsidianrp/rp` (org: `obsidianrp`), visibility Unlisted.
+- **Live on Physgun** (TestRP server) as of 2026-05-13. Phase 1 baseline complete.
+- Phase 3 chat commands (/roll, /ticket, /report) implemented locally (commit `be4430d`) but not yet republished.
 
 ## Direction (decided in initial planning)
 
