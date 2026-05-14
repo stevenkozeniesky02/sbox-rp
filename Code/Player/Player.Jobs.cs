@@ -31,12 +31,25 @@ public sealed partial class Player
 		if ( !Networking.IsHost || definition is null )
 			return;
 
+		var oldPath = JobDefinitionPath;
 		CleanupPreviousJobItems( JobDefinitionPath, definition.ResourcePath );
 
 		JobDefinitionPath = definition.ResourcePath;
 		SetJobTitle( definition.Title );
 		PlayerData?.SetJob( definition.ResourcePath, definition.Title );
 		SaveRoleplayData();
+
+		if ( PlayerData.IsValid() )
+			DispatchJobChange( oldPath, definition.ResourcePath, PlayerData );
+	}
+
+	private static void DispatchJobChange( string oldPath, string newPath, PlayerData pd )
+	{
+		if ( string.Equals( oldPath, newPath, StringComparison.OrdinalIgnoreCase ) )
+			return;
+
+		JobSystemRegistry.Find( oldPath )?.OnLeftJob( pd );
+		JobSystemRegistry.Find( newPath )?.OnBecameJob( pd );
 	}
 
 	void CleanupPreviousJobItems( string oldJobDefinitionPath, string newJobDefinitionPath )
