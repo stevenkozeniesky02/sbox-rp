@@ -15,7 +15,7 @@ public interface IJobSystem
 /// Auto-registers with <see cref="JobSystemRegistry"/> on construction.
 /// </summary>
 public abstract class JobSystem<TSelf> : GameObjectSystem<TSelf>, IJobSystem
-	where TSelf : JobSystem<TSelf>, new()
+	where TSelf : JobSystem<TSelf>
 {
 	protected JobSystem( Scene scene ) : base( scene )
 	{
