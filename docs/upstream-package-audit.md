@@ -34,6 +34,18 @@ This means: when a library is good, we own a copy. When it's abandoned, we still
 | `sanboxstore.realistic_lockpick` | Lockpick (addon — 4 days old, 1 thumb up, 2.3KB) | Page is real, package is real. Added to `PackageReferences` in sbproj first — that's not how libraries are mounted (per docs above). Library Manager Installed tab stayed empty. Yanked the sbproj entry; install via UI when Phase D wants it. |
 | `null.duplicator` | Duplicator / CopyPaste (addon — 3 years old, 18 thumbs up, 14.2KB, "The Duplicator tool from Garry's mod") | Same — real package, wrong mounting mechanism. Yank + reinstall via UI. |
 
+## Open question: how do you install a `type=addon` package?
+
+Library Manager → Browse search for `realistic_lockpick` returned **zero results** — Library Manager's Browse seems to surface `type=library` packages only, not `type=addon`. So the documented "Library Manager UI install" path (per `dev/doc/code/libraries`) doesn't apply to these.
+
+Things to try when we revisit (Phase D):
+- In Library Manager Browse, set the **Category** filter explicitly to "Addon" (we didn't see this option but didn't try the dropdown). If that surfaces them, that's the path.
+- Try installing directly from the package page on sbox.game while **logged in via the editor's Steam session** — there may be an Install/Subscribe button visible to logged-in users that isn't there for anonymous viewers.
+- Check the Tools or Settings menu for an "Install Package..." dialog accepting an ident.
+- Worst case: clone source from the package author's GitHub if it's open-source, drop into `Libraries/<org>.<ident>/` manually, commit.
+
+Punted to Phase D (when lockpick/duplicator are actually needed for criminal mechanics + admin tooling).
+
 ## Still to search
 
 | Feature | Status | Notes |
