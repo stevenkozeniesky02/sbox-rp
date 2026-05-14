@@ -12,6 +12,21 @@ Living list of sbox.game packages + Facepunch upstream code we'd **reference ins
 | Money printer base | `Code/Player/Player.MoneyPrinters.cs` | sousou63's port (tier/upgrade ladder is our extension job in Phase D) |
 | Job framework | `Code/Jobs/` + `Assets/jobs/*.jobdef` | sousou63's port |
 
+## Server-side runtime install (the missing piece)
+
+Per [Physgun's help docs](https://physgun.com/help/game-hosting/sbox/how-to-add-addons-to-sbox-server/), the canonical way to add addons to a **running s&box server** is via the in-game console (or Physgun panel console):
+
+- **`package_install <org>/<ident>`** — fetches + mounts a package onto the server at runtime. No sbproj changes, no republish needed.
+- **`package_list`** — shows currently installed packages.
+
+This is how Physgun docs install gamemodes themselves (their example: `package_install dxura/rp` — which is sousou63's DarkRP fork, our upstream).
+
+For **obsidianrp**, this gives admins (or us) a clean operational toggle:
+- Want lockpick on the live server? `package_install sanboxstore/realistic_lockpick` from Physgun panel. Our gamemode can then `Package.Fetch` its assets at runtime without us publishing a new build.
+- Want to remove an addon? Probably a `package_uninstall` command or rolling back to a pre-install state.
+
+**Important caveat:** server-installed addons don't bake into our published package. They're per-server. If we change Physgun servers we'd need to `package_install` again. So compile-time `Cloud.Model("ident")` is still preferable for assets we *always* want shipped with our gamemode.
+
 ## Three s&box dependency mechanisms — pick the right one
 
 After multiple wrong turns, here's the actual taxonomy:
@@ -37,7 +52,8 @@ After multiple wrong turns, here's the actual taxonomy:
 
 **Decision tree for adding new external content:**
 - Need executable C# code? → use a **Library**.
-- Need just a model/material/sound? → use a **Cloud Asset** by ident.
+- Need just a model/material/sound that *always* ships with our gamemode? → use a **Cloud Asset** by ident with compile-time `Cloud.Model(...)`.
+- Need a model/asset that's *server-toggleable* (admin can enable/disable per-server)? → `package_install <ident>` in server console + `Package.Fetch + MountAsync` at runtime.
 - Need to ship a model/material yourself for others to use? → publish via **Addon Project**.
 
 ## Currently referenced
