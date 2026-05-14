@@ -30,9 +30,7 @@ public sealed class PaydaySystem : GameObjectSystem<PaydaySystem>
 
 	private void RunPayday()
 	{
-		// TODO: when ServerEventSystem lands in Task 4, switch to:
-		//   var isDouble = ServerEventSystem.Instance?.IsDoublePaycheck ?? false;
-		var isDouble = false;
+		var isDouble = ServerEventSystem.Current?.IsDoublePaycheck ?? false;
 		var multiplier = ComputeMultiplierFor( isDouble );
 
 		foreach ( var player in Scene.GetAll<Player>() )
