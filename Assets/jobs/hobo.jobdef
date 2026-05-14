@@ -5,12 +5,16 @@
   "AccentColor": "0.7294,0.7569,0.8275,1",
   "Salary": 0,
   "MaxPlayers": 3,
+  "RequiresVote": false,
   "Command": "/hobo",
   "Order": 90,
   "StartingItems": [
     "weapons/crowbar/crowbar.prefab",
-    "weapons/ragebait/ragebait.prefab"
+    "weapons/ragebait/ragebait.prefab",
+    "weapons/Begging/begging_tool.prefab"
   ],
+  "UseOwnerAvatarAppearance": false,
+  "PreserveOwnerAvatarAppearance": true,
   "Clothing": [
     "models/citizen_clothes/hat/flatcap/flatcap.clothing",
     "models/citizen_clothes/jumper/cardigan/cardigan_dirty.clothing",
