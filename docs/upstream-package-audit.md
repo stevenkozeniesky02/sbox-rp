@@ -27,6 +27,30 @@ For **obsidianrp**, this gives admins (or us) a clean operational toggle:
 
 **Important caveat:** server-installed addons don't bake into our published package. They're per-server. If we change Physgun servers we'd need to `package_install` again. So compile-time `Cloud.Model("ident")` is still preferable for assets we *always* want shipped with our gamemode.
 
+**Confirmed working 2026-05-13 on obsidianrp TestRP:**
+```
+package_install sanboxstore/realistic_lockpick
+[Physgun] downloading Realistic Lockpick...
+[Physgun] compiling Realistic Lockpick code...    ← addon DID have compileable code, despite docs saying otherwise
+[Physgun]   ✓ sanboxstore.realistic_lockpick (0.0s)
+[Physgun] ✓ Realistic Lockpick: 2.3KB across 3 files in 0.1s
+[Physgun] ✓ Realistic Lockpick compiled in 0.0s
+
+package_install null/duplicator
+[Physgun] downloading Sandbox...              ← pulled facepunch.sandbox as dependency
+[Physgun] compiling Sandbox code...
+[Physgun]   ✓ facepunch.sandbox (7.2s)
+[Physgun] ✓ Duplicator: 181B across 2 files in 0.9s  ← duplicator itself is just metadata; behavior lives in facepunch.sandbox
+```
+
+`package_list` then shows 183 active packages including:
+- `sanboxstore.realistic_lockpick [console]`
+- `null.duplicator [console]`
+- `facepunch.sandbox [console]` (dragged in by duplicator)
+- And ~180 other packages auto-mounted by the published gamemode (props, weapons, sounds, fonts — every asset MauveRP/sousou63 chose lives in its own little package).
+
+**Correction to earlier note:** addons can absolutely ship compileable code — saw `compiling Realistic Lockpick code` in the install output. The docs saying otherwise either apply only to the "Addon Project" type at publish time, or are outdated.
+
 ## Three s&box dependency mechanisms — pick the right one
 
 After multiple wrong turns, here's the actual taxonomy:
