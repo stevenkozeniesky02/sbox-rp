@@ -1,3 +1,5 @@
+using Sandbox.UI;
+
 /// <summary>
 /// Thief tool. Aim at another player, attack1 → server takes a percentage of
 /// their cash (capped) and gives it to the thief. 3-minute cooldown (shared
