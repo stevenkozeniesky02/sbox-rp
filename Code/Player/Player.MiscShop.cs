@@ -29,6 +29,13 @@ public sealed partial class Player
 			return;
 		}
 
+		if ( string.Equals( prefabPath, MoneySafe.PrefabPath, StringComparison.OrdinalIgnoreCase )
+			&& MoneySafe.CountOwned( Network.Owner ) >= MoneySafe.MaxOwnedPerPlayer )
+		{
+			Notices.SendNotice( Network.Owner, "block", Color.Red, $"You already own {MoneySafe.MaxOwnedPerPlayer} safe(s).", 3 );
+			return;
+		}
+
 		if ( !TryTakeMoney( definition.Price ) )
 		{
 			Notices.SendNotice( Network.Owner, "block", Color.Red, "You don't have enough money.", 3 );
@@ -44,6 +51,13 @@ public sealed partial class Player
 
 		if ( string.Equals( prefabPath, Lawboard.PrefabPath, StringComparison.OrdinalIgnoreCase )
 			&& Lawboard.TrySpawn( this ) )
+		{
+			Notices.SendNotice( Network.Owner, "$", Color.Green, $"{definition.Title} purchased.", 3 );
+			return;
+		}
+
+		if ( string.Equals( prefabPath, MoneySafe.PrefabPath, StringComparison.OrdinalIgnoreCase )
+			&& MoneySafe.TrySpawn( this ) )
 		{
 			Notices.SendNotice( Network.Owner, "$", Color.Green, $"{definition.Title} purchased.", 3 );
 			return;

@@ -1,0 +1,140 @@
+@using Sandbox;
+@using Sandbox.UI;
+@inherits Panel
+@namespace Sandbox
+
+<root class="money-safe-popup">
+    <div class="safe-panel" onclick:preventDefault=@true>
+        <label class="safe-title">Money Safe</label>
+        <label class="safe-balance">Stored: $@FormatMoney( Target?.StoredMoney ?? 0 )</label>
+
+        <label class="safe-row-label">Deposit</label>
+        <div class="safe-row">
+            <div class="safe-button @(CanDeposit( 100 ) ? "" : "disabled")" @onclick="@(() => Deposit( 100 ))">
+                <label>$100</label>
+            </div>
+            <div class="safe-button @(CanDeposit( 500 ) ? "" : "disabled")" @onclick="@(() => Deposit( 500 ))">
+                <label>$500</label>
+            </div>
+            <div class="safe-button @(CanDeposit( 1000 ) ? "" : "disabled")" @onclick="@(() => Deposit( 1000 ))">
+                <label>$1,000</label>
+            </div>
+            <div class="safe-button @(CanDepositAll() ? "" : "disabled")" @onclick="@(() => DepositAll())">
+                <label>All</label>
+            </div>
+        </div>
+
+        <label class="safe-row-label">Withdraw</label>
+        <div class="safe-row">
+            <div class="safe-button @(CanWithdraw( 100 ) ? "" : "disabled")" @onclick="@(() => Withdraw( 100 ))">
+                <label>$100</label>
+            </div>
+            <div class="safe-button @(CanWithdraw( 500 ) ? "" : "disabled")" @onclick="@(() => Withdraw( 500 ))">
+                <label>$500</label>
+            </div>
+            <div class="safe-button @(CanWithdraw( 1000 ) ? "" : "disabled")" @onclick="@(() => Withdraw( 1000 ))">
+                <label>$1,000</label>
+            </div>
+            <div class="safe-button @(CanWithdrawAll() ? "" : "disabled")" @onclick="@(() => WithdrawAll())">
+                <label>All</label>
+            </div>
+        </div>
+
+        <div class="safe-row">
+            <div class="safe-button secondary" @onclick="@(() => Delete())">
+                <label>Close</label>
+            </div>
+        </div>
+    </div>
+</root>
+
+@code
+{
+    MoneySafe Target { get; set; }
+
+    bool CanDeposit( int amount )
+    {
+        var player = Player.FindLocalPlayer();
+        return Target.IsValid()
+            && amount > 0
+            && player?.CanAfford( amount ) == true
+            && (Target.StoredMoney + amount) <= MoneySafe.MaxStorage;
+    }
+
+    bool CanDepositAll()
+    {
+        var player = Player.FindLocalPlayer();
+        if ( !Target.IsValid() || player is null ) return false;
+        var available = System.Math.Min( player.Money, MoneySafe.MaxStorage - Target.StoredMoney );
+        return available > 0;
+    }
+
+    bool CanWithdraw( int amount )
+    {
+        return Target.IsValid()
+            && amount > 0
+            && Target.StoredMoney >= amount;
+    }
+
+    bool CanWithdrawAll()
+    {
+        return Target.IsValid() && Target.StoredMoney > 0;
+    }
+
+    static string FormatMoney( int amount )
+    {
+        return amount.ToString( "n0" );
+    }
+
+    void Deposit( int amount )
+    {
+        if ( !CanDeposit( amount ) ) return;
+        Target.RequestDeposit( amount );
+    }
+
+    void DepositAll()
+    {
+        var player = Player.FindLocalPlayer();
+        if ( !Target.IsValid() || player is null ) return;
+        var amount = System.Math.Min( player.Money, MoneySafe.MaxStorage - Target.StoredMoney );
+        if ( amount <= 0 ) return;
+        Target.RequestDeposit( amount );
+    }
+
+    void Withdraw( int amount )
+    {
+        if ( !CanWithdraw( amount ) ) return;
+        Target.RequestWithdraw( amount );
+    }
+
+    void WithdrawAll()
+    {
+        if ( !CanWithdrawAll() ) return;
+        Target.RequestWithdraw( Target.StoredMoney );
+    }
+
+    public override bool HasContent => true;
+
+    public static void Open( MoneySafe target )
+    {
+        if ( !target.IsValid() ) return;
+
+        var parent = Game.ActiveScene.Get<PressableHud>()?.Panel?.FindRootPanel()
+            ?? Game.ActiveScene.Get<Scoreboard>()?.Panel?.FindRootPanel()
+            ?? Game.ActiveScene.Get<PressableHud>()?.Panel
+            ?? Game.ActiveScene.Get<Scoreboard>()?.Panel;
+
+        if ( parent is null ) return;
+
+        foreach ( var existing in parent.Children.OfType<MoneySafePopup>().ToArray() )
+        {
+            existing.Delete();
+        }
+
+        var popup = new MoneySafePopup
+        {
+            Target = target,
+            Parent = parent
+        };
+    }
+}
