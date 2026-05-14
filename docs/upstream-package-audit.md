@@ -12,39 +12,46 @@ Living list of sbox.game packages + Facepunch upstream code we'd **reference ins
 | Money printer base | `Code/Player/Player.MoneyPrinters.cs` | sousou63's port (tier/upgrade ladder is our extension job in Phase D) |
 | Job framework | `Code/Jobs/` + `Assets/jobs/*.jobdef` | sousou63's port |
 
-## How to actually install a library
+## Three s&box dependency mechanisms — pick the right one
 
-Per [s&box docs › Libraries](https://sbox.game/dev/doc/code/libraries): **libraries (what sbox.game labels "addons") are NOT mounted via `PackageReferences`.** They are source-copied into the project. Correct workflow:
+After multiple wrong turns, here's the actual taxonomy:
 
-1. In the editor: **View menu → Library Manager**.
-2. Browse tab → search for the package (e.g. `realistic_lockpick`, `duplicator`).
-3. Click **Install**. The editor writes the library's source files to `~/sbox-rp/Libraries/<org>.<ident>/`.
-4. **Commit `Libraries/<org>.<ident>/`** to git — the source becomes part of our repo. We own it from then on (can edit, delete what we don't need, etc).
+**1. Libraries** (per [docs › Libraries](https://sbox.game/dev/doc/code/libraries))
+- C# source code packages — shared reusable code + assets.
+- Install via **View → Library Manager → Browse → Install**.
+- Source files land in `<project>/Libraries/<org>.<ident>/`.
+- Commit `Libraries/<...>/` to git — we own the source after install.
+- The "addons" on sbox.game tagged with `extension Addon` are **NOT** libraries (different category).
 
-This means: when a library is good, we own a copy. When it's abandoned, we still have it. If we want to change behavior, we just edit the files.
+**2. Addons** (per [docs › Addon Project](https://sbox.game/dev/doc/getting-started/project-types/addon-project))
+- *Asset-only* packages (maps, models, materials, ActionGraph) that target a base game.
+- **Cannot contain C# code.** Only ActionGraph for behavior.
+- The author published the package via an "Addon Project" type in the editor, targeting a specific base game.
+- **Consumed as Cloud Assets** (see #3) — NOT via `PackageReferences`.
 
-## Installed via Library Manager → committed under `Libraries/`
+**3. Cloud Assets** (per [docs › Cloud Assets](https://sbox.game/dev/doc/assets/resources/cloud-assets)) — this is how you USE an addon's content
+- **Cloud Browser drag-and-drop** in the editor (easiest) — drag asset from cloud browser into your scene; editor auto-downloads + caches.
+- **Property reference**: `public Model MyModel { get; set; }` — the Cloud Browser lets the editor pick a cloud asset for that property.
+- **Code reference**: `Cloud.Model("sanboxstore.realistic_lockpick")` — compile-time download. Asset gets baked into our published package.
+- **Runtime fetch**: `await Package.Fetch(ident); await package.MountAsync();` — dynamic GMod-style asset mounting.
 
-*(none yet — install via UI, then add a row here listing org.ident + feature + commit hash where added)*
+**Decision tree for adding new external content:**
+- Need executable C# code? → use a **Library**.
+- Need just a model/material/sound? → use a **Cloud Asset** by ident.
+- Need to ship a model/material yourself for others to use? → publish via **Addon Project**.
 
-## Tried via the wrong mechanism (PackageReferences)
+## Currently referenced
 
-| Package | Feature | What happened |
+*(none — `PackageReferences` array in sandbox.sbproj is empty. Libraries we've installed live under `Libraries/`. Cloud assets are referenced inline in code or via property bindings.)*
+
+## Lessons learned the hard way
+
+| Package | Mistake | Correct approach |
 |---|---|---|
-| `sanboxstore.realistic_lockpick` | Lockpick (addon — 4 days old, 1 thumb up, 2.3KB) | Page is real, package is real. Added to `PackageReferences` in sbproj first — that's not how libraries are mounted (per docs above). Library Manager Installed tab stayed empty. Yanked the sbproj entry; install via UI when Phase D wants it. |
-| `null.duplicator` | Duplicator / CopyPaste (addon — 3 years old, 18 thumbs up, 14.2KB, "The Duplicator tool from Garry's mod") | Same — real package, wrong mounting mechanism. Yank + reinstall via UI. |
+| `sanboxstore.realistic_lockpick` (addon — Released, 4d old, 1 👍, 2.3KB) | Added to `PackageReferences` → did nothing | Phase D: `Cloud.Model("sanboxstore.realistic_lockpick")` in our weapon class, write C# behavior ourselves (addons can't contain code). |
+| `null.duplicator` (addon — Released, 3yr old, 18 👍, 14.2KB, tagged `gmod`) | Same | Phase E: similar approach — `Cloud.Model(...)` + ActionGraph if the addon ships behavior that way. If we want full C# control, study MauveRP STUDIED #31 (CopyPasteTool) and build it from scratch. |
 
-## Open question: how do you install a `type=addon` package?
-
-Library Manager → Browse search for `realistic_lockpick` returned **zero results** — Library Manager's Browse seems to surface `type=library` packages only, not `type=addon`. So the documented "Library Manager UI install" path (per `dev/doc/code/libraries`) doesn't apply to these.
-
-Things to try when we revisit (Phase D):
-- In Library Manager Browse, set the **Category** filter explicitly to "Addon" (we didn't see this option but didn't try the dropdown). If that surfaces them, that's the path.
-- Try installing directly from the package page on sbox.game while **logged in via the editor's Steam session** — there may be an Install/Subscribe button visible to logged-in users that isn't there for anonymous viewers.
-- Check the Tools or Settings menu for an "Install Package..." dialog accepting an ident.
-- Worst case: clone source from the package author's GitHub if it's open-source, drop into `Libraries/<org>.<ident>/` manually, commit.
-
-Punted to Phase D (when lockpick/duplicator are actually needed for criminal mechanics + admin tooling).
+Both are confirmed-real packages. We just can't *mount* them — only use their assets at compile-or-runtime via `Cloud.*` APIs.
 
 ## Still to search
 
