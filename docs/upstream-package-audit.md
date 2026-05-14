@@ -44,6 +44,26 @@ After multiple wrong turns, here's the actual taxonomy:
 
 *(none — `PackageReferences` array in sandbox.sbproj is empty. Libraries we've installed live under `Libraries/`. Cloud assets are referenced inline in code or via property bindings.)*
 
+## Verified working: `Cloud.Model(<ident>)` for type=Model packages
+
+Confirmed 2026-05-13 in the editor via a temporary probe (`CloudAssetProbe.cs`, since removed):
+```csharp
+Cloud.Model( "fish.wrench" )
+// → models/items/wrench/wrench.vmdl
+// → bounds: mins -0.0868,-0,-10.5007  maxs 0.0868,1.912,0.1694
+```
+
+Requirements observed:
+- Argument **must be a string literal** (compiler does the download at build time — variables fail with `SB2000: Must use a string literal for a CloudAssetProvider`).
+- Package must be type=Model (or at least have a Model as the bakeable primary asset). Addon-type packages fail with `SB2000: Could not resolve package asset`.
+- Once resolved, the model is **baked into our published package** — survives without runtime fetches.
+
+## Verified working: `Package.Fetch(<ident>)` at runtime
+
+For addon-type packages where `Cloud.Model` can't bake (no primary Model), `Package.Fetch` succeeds at runtime — gets the package metadata. To actually use contents, follow with `package.MountAsync()` and load files from the mounted filesystem.
+
+Both `sanboxstore.realistic_lockpick` and `null.duplicator` fetch cleanly but expose no `PrimaryAsset` meta (they're bundles, not single-asset packages).
+
 ## Lessons learned the hard way
 
 | Package | Mistake | Correct approach |
