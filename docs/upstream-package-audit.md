@@ -80,9 +80,27 @@ After multiple wrong turns, here's the actual taxonomy:
 - Need a model/asset that's *server-toggleable* (admin can enable/disable per-server)? → `package_install <ident>` in server console + `Package.Fetch + MountAsync` at runtime.
 - Need to ship a model/material yourself for others to use? → publish via **Addon Project**.
 
-## Currently referenced
+## Currently referenced (via `sandbox.sbproj` → `PackageReferences`)
 
-*(none — `PackageReferences` array in sandbox.sbproj is empty. Libraries we've installed live under `Libraries/`. Cloud assets are referenced inline in code or via property bindings.)*
+| Package | Mount confirmation | Notes |
+|---|---|---|
+| `sanboxstore.realistic_lockpick` | `package_list` shows it as `[local]` in editor play mode | Asset bundle; use `Package.Fetch` at runtime to access contents. |
+
+### Tried but pulled (Phase A): `null.duplicator`
+
+Added to PackageReferences, mounted cleanly, but transitively pulled in `facepunch.sandbox` (the upstream Facepunch sandbox gamemode). That introduced a **`Player` class collision** between `facepunch.sandbox.Player` and our `obsidianrp.rp.Player`:
+
+```
+Error when deserializing Sandbox.UI.Nameplate.Player ([A]Player cannot be cast to [B]Player.
+Type A: package.facepunch.sandbox, [B]: package.obsidianrp.rp)
+```
+
+Both `Player` classes live in `namespace Sandbox;` so the runtime can't tell them apart between assembly contexts.
+
+Pulled the duplicator ref until Phase E. Options for resolving when we revisit:
+- Move our `Player` class into a non-`Sandbox` namespace (e.g. `ObsidianRP`). Touches every Player partial + every consumer.
+- Don't use `null.duplicator` — write our own duplicator from scratch (MauveRP STUDIED #31 has the structure to mirror).
+- See if there's a `null.duplicator` alternative that doesn't depend on `facepunch.sandbox`.
 
 ## Verified working: `Cloud.Model(<ident>)` for type=Model packages
 
